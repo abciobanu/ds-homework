@@ -1,0 +1,165 @@
+CIOBANU Andrei-Bogdan - 312CB
+
+Structuri de date (Seria CB)
+Tema 2 - Netflix
+
+Structurile de date folosite pentru gestionarea serialelor și funcțiile aferente
+au fost implementate conform enunțului.
+
+Pentru serialele din top10, câmpul id din structură reprezintă poziția în top.
+Structura de serial prezintă și un câmp watch_time_left, în care se păstrează
+durata ramasă din serial de vizionat.
+
+top.h/.c:
+    - update_top_positions(): actualizează pozițiile din top, începând cu celula
+start; modifier reprezintă valoarea cu care se modifică pozițiile: +1 dacă s-a
+adăugat un serial nou / -1 dacă s-a scos un serial din top;
+    - fix_top_overflow(): elimină serialele care au ieșit din top; se verifică
+ultima celulă din listă, căci această funcție este apelată ori de câte ori se
+adaugă un serial nou în top, așadar se poate face "overflow" cu cel mult un
+serial;
+    - top_insert() - funcția de inserare în top: iterează prin listă până
+găsește poziția de inserare; inserează noua celulă ca într-o listă normală, apoi
+apelează update_top_positions() și fix_top_overflow() pentru a actualiza
+pozițiile din top (câmpul id din structura de serial) și a elimina serialul care
+iese din top (dacă este cazul);
+    - add_top(): adaugă un serial nou în top; se folosește de funcția din get.h
+get_series_from_input() pentru a construi serialul din datele de la intrare;
+apelează top_insert() pentru inserarea propriu-zisă;
+    - top_remove(): scoate un element din top, deci din listă; returnează
+informația din celula extrasă, adică serialul.
+
+database_ops.h/.c:
+    - conține funcțiile care reprezintă operațiile ce se pot efectua asupra
+serialelor: adăugare serial în baza de date, adăugare sezon integral etc.;
+    - insertion_fcmp() - funcția de comparare pentru inserarea în categoriile
+1-3;
+
+utils.h/.c:
+    - initialize_database(): după cum spune și numele, inițializează baza de
+date: cele patru categorii (1-3 + top10), coada watch_later, stiva
+currently_watching, stiva history;
+    - free_database(): eliberează memoria ocupată de baza de date;
+    - parse_instructions(): analizează operațiile date la intrare; se folosește
+un buffer de dimensiune LINE_BUFFER_SIZE (512) pentru liniile din fișierul de
+date de intrare; se analizează fiecare linie în parte, iar cu ajutorul funcției
+strtok() se împarte linia în token-uri separate de DELIMITERS (" \n"); în
+funcție de primul token care reprezintă tipul operației, se apelează una dintre
+funcțiile din database_ops.h: add_series(), add_season(), add_top(), later(),
+watch() sau show().
+
+Fișierul Makefile prezintă două reguli:
+    - build, care compilează sursele și obține executabilul cu numele tema2;
+s-au folosit -Wall și -Wextra pentru a activa cât mai multe warning flags;
+    - clean, care șterge singurul executabil generat, tema2.
+
+Punctajul obținut la teste:
+
+                           = Tema 2 SD Netflix =
+
+[ex1.out]...........................................passed  [02/135]
+[VALGRIND: PASSED]....................................passed
+
+[ex2.out]...........................................passed  [02/135]
+[VALGRIND: PASSED]....................................passed
+
+[ex3.out]...........................................passed  [02/135]
+[VALGRIND: PASSED]....................................passed
+
+[ex4.out]...........................................passed  [02/135]
+[VALGRIND: PASSED]....................................passed
+
+[test1.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test2.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test3.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test4.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test5.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test6.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test7.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test8.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test9.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test10.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+[test11.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test12.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test13.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test14.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test15.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test16.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test17.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test18.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test19.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+[test20.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+[test21.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test22.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test23.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test24.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test25.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test26.out]...........................................passed  [04/135]
+[VALGRIND: PASSED]....................................passed
+
+[test27.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+[test28.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+[test29.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+[test30.out]...........................................passed  [05/135]
+[VALGRIND: PASSED]....................................passed
+
+
+                                           Total: [135/135]
+
+                                           Bonus: [20/20]

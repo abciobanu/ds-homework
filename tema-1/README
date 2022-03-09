@@ -1,0 +1,59 @@
+CIOBANU Andrei-Bogdan - 312CB
+
+Tema 1 - Structuri de date (seria CB)
+Tabele hash
+
+Perechile de date de forma (Key, Value), unde Key reprezintă adresa web și Value
+reprezintă adresa IP asociată, sunt exprimate prin structura dns_pair, împreună
+cu funcțiile de creare de pereche, eliberare de pereche, comparație de două
+perechi și afișare de adresă IP dintr-o pereche, în dns_pair.h/.c.
+
+Structura de listă dublu înlănțuită circulară generică, alături de funcțiile
+aferente, sunt descrise în linked_list.h/.c.
+
+Tabela hash și funcțiile ce operează pe aceasta sunt expuse în hash_table.h/.c.
+
+În utils.h/.c se regăsesc funcția de hashing dns_hash_func() pentru perechile de
+date din memoria unui server DNS (dns_pair) și funcția parse_instructions() care
+analizează datele de intrare, operații DNS precum put, get, remove, find, print,
+print_bucket.
+
+dns_put():
+    - adaugă perechea (web_addr, ip) în tabela hash;
+    - dacă web_addr există în tabelă, aceasta nu va mai fi adaugată;
+    - adresa web și adresa IP sunt extrase din stream-ul de intrare.
+
+dns_get():
+    - afișează în stream adresa IP corespunzătoare web_addr;
+    - dacă web_addr nu există în tabela hash, afișează "NULL";
+    - adresa web web_addr este citită din fișierul de date de intrare.
+
+dns_remove():
+    - identifică perechea care conține cheia web_addr și o șterge din tabelă;
+    - adresa web_addr este citită din fișierul de intrare.
+
+dns_find():
+    - caută adresa web în tabela hash și afișează în stream "True" sau "False",
+în funcție de caz;
+    - la căutare, se folosește o pereche (web_addr, ""), căci adresa IP din
+pereche nu are importanță - căutarea se face după adresa web.
+
+Flow-ul programului este următorul:
+    - pentru început, se verifică dacă numărul de argumente în linia de comandă
+este corect; acest număr este definit prin MACRO-ul N_ARGS (4);
+    - se inițializează tabela hash în funcție de numărul de bucket-uri dat în
+linia de comandă și se deschid fișierele de intrare și de ieșire;
+    - se apelează funcția parse_instructions() pentru a parcurge operațiile din
+fișierul de date de intrare;
+    - în parse_instructions(), cu ajutorul unui buffer, se citesc pe rând linii
+din fișier; în funcție de operația DNS identificată, se apelează dns_put(),
+dns_get(), dns_remove(), dns_find(), print_hash_table() sau print_bucket();
+    - după ce s-au analizat toate liniile din fișierul de date intrare și s-au
+efectuat operațiile corespunzătoare, se inchid fișierele de date de intrare și
+de ieșire, apoi se distruge tabela hash;
+    - se iese din program.
+
+Fișierul Makefile prezintă două reguli:
+    - build, care compilează sursele și obține executabilul cu numele tema1;
+s-au folosit -Wall și -Wextra pentru a activa cât mai multe warning flags;
+    - clean, care șterge singurul executabil generat, tema1.

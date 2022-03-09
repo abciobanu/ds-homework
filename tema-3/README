@@ -1,0 +1,157 @@
+CIOBANU Andrei-Bogdan - 312CB
+
+Structuri de date (Seria CB)
+Tema 3 - Bibliotecă online
+
+convert.h/.c:
+    - conține funcțiile de conversie din char în int și invers;
+
+book.h/.c:
+    - reprezentarea informațiilor despre o carte (titlu, autor, rating, număr de
+pagini) + funcțiile de alocare de memorie pentru structură și de eliberare de
+memorie;
+
+trie.h/.c:
+    - reprezentarea unui nod dintr-un arbore de prefixe + funcțiile aferente;
+    - la inserare, se parcurge arborele și se inserează un nod nou, dacă acesta
+nu există; este returnată adresa pointerului info de la sfârșitul căii, pentru
+a-l putea seta ulterior (cu informațiile despre carte / arborele cu cărți ale
+autorului);
+    - pentru eliminarea unei chei din trie, se utilizează o metodă recursivă;
+se parcurge arborele de prefixe până la ultimul caracter din cheie; dacă „pe
+parcurs” se identifică un caracter în cheie care nu face parte din alfabetul
+pentru trie sau caracterul curent din cheie nu se regăsește în trie în poziția
+necesară, atunci cheia lipsește din trie (se returnează NULL); dacă s-a ajuns la
+ultimul caracter din cheie, se verifică dacă s-a ajuns la final de cheie și în
+trie (câmpul info din structură să nu fie NULL); după caz, returnează NULL sau
+eliberează memoria ocupată de nod sau setează câmpul info cu NULL (cu salvarea
+acestuia în prealabil); la întoarcerea din recursivitate, se eliberează memoria
+ocupată de nodul curent numai dacă nu există alte chei care depind de acesta;
+    - trie_search_last_node: se parcurge arborele de prefixe pe fiecare caracter
+din cheie; dacă, la un moment dat, caracterul curent din cheie nu se regăsește
+printre copiii nodului curent parcurs, înseamnă că în trie nu se află cheia ce
+este căutată;
+    - trie_search_info: apelează trie_search_last_node și extrage câmpul info
+din nodul returnat sau NULL dacă finalul căii nu reprezintă finalul unei chei
+în trie (nodul returnat este NULL);
+    - print_trie: afișează cheile din trie; n_max_res = nr. maxim de rezultate
+de afișat; dacă n_max_res = -1, afișează toate cheile din trie; se parcurge
+arborele și la fiecare final de cheie (câmpul info != NULL), se afișează șirul
+de caractere format;
+    - trie_autocomplete: se caută în trie ultimul nod din prefixul dat, apoi se
+apelează funcția print_trie() din acest nod, cu n_max_res = 3 (căci se doresc
+primele maxim trei rezultate, conform enunțului);
+
+cmd_handlers.h/.c:
+    - conține funcțiile care realizează operațiile descrise în enunț: adăugare
+recomandare carte (add_book), căutare carte (search_book), afișare cărți autor
+(list_author), căutare în cărțile unui autor (search_by_author), ștergere
+recomandare (delete_book), autocomplete;
+
+utils.h/.c:
+    - initialize_tries: după cum spune și numele, inițializează cei doi arbori
+de prefixe pentru gestionarea cărților;
+    - free_tries: eliberează memoria ocupată de cei doi arbori de prefixe;
+    - parse_instructions: analizează comenzile date la intrare; se folosește un
+buffer de dimensiune LINE_BUFFER_SIZE (256) pentru liniile din fișierul de date
+de intrare; se analizează fiecare linie în parte, iar cu ajutorul strtok() se
+împarte linia în token-uri separate de CMD_SEPARATOR (" "); în funcție de primul
+token care reprezintă tipul comenzii, se apelează una dintre funcțiile din
+cmd_handlers.h/.c: add_book(), search_book(), list_author(), search_by_author()
+sau delete_book().
+
+Fișierul Makefile prezintă două reguli:
+    - build, care compilează sursele și obține executabilul cu numele tema3;
+s-au folosit -Wall și -Wextra pentru a activa cât mai multe warning flags;
+    - clean, care șterge singurul executabil generat, tema3.
+
+Punctajul obținut la teste:
+
+                      = Tema 3 SD Biblioteca online =
+
+[output_example.txt] ........................................... example
+[output_example.txt - VALGRIND: PASSED] ........................ example
+
+[output1.txt] ........................................... passed  [05/135]
+[output1.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output2.txt] ........................................... passed  [05/135]
+[output2.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output3.txt] ........................................... passed  [05/135]
+[output3.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output4.txt] ........................................... passed  [05/135]
+[output4.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output5.txt] ........................................... passed  [05/135]
+[output5.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output6.txt] ........................................... passed  [05/135]
+[output6.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output7.txt] ........................................... passed  [05/135]
+[output7.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output8.txt] ........................................... passed  [05/135]
+[output8.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output9.txt] ........................................... passed  [05/135]
+[output9.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output10.txt] ........................................... passed  [05/135]
+[output10.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output11.txt] ........................................... passed  [05/135]
+[output11.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output12.txt] ........................................... passed  [05/135]
+[output12.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output13.txt] ........................................... passed  [05/135]
+[output13.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output14.txt] ........................................... passed  [05/135]
+[output14.txt - VALGRIND: PASSED] ........................ passed  [0.5/20]
+
+[output15.txt] ........................................... passed  [05/135]
+[output15.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output16.txt] ........................................... passed  [05/135]
+[output16.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output17.txt] ........................................... passed  [05/135]
+[output17.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output18.txt] ........................................... passed  [05/135]
+[output18.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output19.txt] ........................................... passed  [05/135]
+[output19.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output20.txt] ........................................... passed  [05/135]
+[output20.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output21.txt] ........................................... passed  [05/135]
+[output21.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output22.txt] ........................................... passed  [05/135]
+[output22.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output23.txt] ........................................... passed  [05/135]
+[output23.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output24.txt] ........................................... passed  [05/135]
+[output24.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output25.txt] ........................................... passed  [05/135]
+[output25.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output26.txt] ........................................... passed  [05/135]
+[output26.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+[output27.txt] ........................................... passed  [05/135]
+[output27.txt - VALGRIND: PASSED] ........................ passed  [1.0/20]
+
+                                                           Total: [135/135]
+                                                           Bonus: [20.0/20.0]
